@@ -23,70 +23,87 @@ class _StringAbBlockState extends State<StringAbBlock> {
   LogFractal get item => widget.item;
 
   bool editMode = false;
+  bool active = false;
 
   @override
   Widget build(BuildContext context) {
-    return SwipeActionCell(
-      key: ObjectKey(item.id),
+    return buildCell();
+  }
 
-      ///this key is necessary
-      leadingActions: <SwipeAction>[
-        SwipeAction(
-          title: item.id,
-          onTap: (CompletionHandler handler) async {
-            //list.removeAt(index);
-            //setState(() {});
-          },
-          color: Color.fromARGB(200, 54, 54, 54),
-        ),
-      ],
-      child: Container(
-        height: 40,
-        child: editMode
-            ? buildInput()
-            : Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  InkWell(
-                    onTap: () {
-                      Get.to(
-                        () => AbThingScreen(
-                          fractal: item,
-                          key: Key(item.thing.value),
-                        ),
-                        routeName: item.action.value,
-                      );
-                    },
-                    onLongPress: () {
-                      setState(() {
-                        editMode = !editMode;
-                      });
-                    },
-                    child: buildContent(),
-                  ).expand(),
-                  Text(
-                    item.time.value.toString(),
-                    style: const TextStyle(
-                      fontSize: 12,
-                      color: Colors.grey,
-                    ),
-                  ).pOnly(right: 4),
-                ],
-              ),
-      ),
-      trailingActions: [
-        SwipeAction(
-          title: timeago.format(
-                DateTime.fromMillisecondsSinceEpoch(
-                  item.time.value,
+  Widget buildCell() {
+    return Container(
+      child: SwipeActionCell(
+        key: ObjectKey(item.id),
+
+        ///this key is necessary
+        leadingActions: <SwipeAction>[
+          SwipeAction(
+            title: item.id,
+            onTap: (CompletionHandler handler) async {
+              //list.removeAt(index);
+              //setState(() {});
+            },
+            color: Color.fromARGB(200, 54, 54, 54),
+          ),
+        ],
+        trailingActions: [
+          SwipeAction(
+            title: timeago.format(
+                  DateTime.fromMillisecondsSinceEpoch(
+                    item.time.value,
+                  ),
+                  locale: 'en_short',
+                ) +
+                ' ago',
+            onTap: (CompletionHandler handler) async {},
+            color: Colors.blue,
+          ),
+        ],
+        child: Container(
+          padding: const EdgeInsets.symmetric(
+            horizontal: 8,
+          ),
+          color: active ? Colors.grey.shade300 : null,
+          height: 40,
+          child: editMode
+              ? buildInput()
+              : Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    InkWell(
+                      onTap: () {
+                        /*
+                        setState(() {
+                          active = !active;
+                        });
+                        */
+
+                        Get.to(
+                          () => AbThingScreen(
+                            fractal: item,
+                            key: Key(item.thing.value),
+                          ),
+                          routeName: item.action.value,
+                        );
+                      },
+                      onLongPress: () {
+                        setState(() {
+                          editMode = !editMode;
+                        });
+                      },
+                      child: buildContent(),
+                    ).expand(),
+                    Text(
+                      item.time.value.toString(),
+                      style: const TextStyle(
+                        fontSize: 12,
+                        color: Colors.grey,
+                      ),
+                    ).pOnly(right: 4),
+                  ],
                 ),
-                locale: 'en_short',
-              ) +
-              ' ago',
-          onTap: (CompletionHandler handler) async {},
-          color: Colors.blue,
         ),
-      ],
+      ),
     );
   }
 

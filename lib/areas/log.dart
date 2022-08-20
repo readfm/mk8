@@ -48,10 +48,14 @@ class _Log8AreaState extends State<Log8Area> {
               mode: OrderingMode.desc,
             )
       ]);
-    /*
-      ..where(
-        (tbl) => tbl.thing.equals(widget.thing),
-      );*/
+
+    if (widget.thing[0] == '.') {
+      query.where(
+        (tbl) => tbl.action.like(
+          '%' + widget.thing.substring(1) + '%',
+        ),
+      );
+    }
 
     catalog = CatalogFractal<LogFractal>(
       id: 'msgs',
@@ -60,8 +64,6 @@ class _Log8AreaState extends State<Log8Area> {
     );
     super.initState();
     controller = SwipeActionController();
-
-    _inputCtrl = TextEditingController();
 
     /*
     catalog.refreshed.listen((_) {
@@ -90,97 +92,23 @@ class _Log8AreaState extends State<Log8Area> {
           },
         ),
         body: */
-        VStack([
-      buildInput(),
-      Expanded(
-        child: Listen(
-          catalog.refreshed,
-          (ctx, child) => VStack([
-            Expanded(
-              child: ReorderableListView.builder(
-                key: Key('list'),
-                buildDefaultDragHandles: false,
-                onReorder: (oldIndex, newIndex) {},
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 8,
-                ),
-                shrinkWrap: true,
-                itemBuilder: (c, index) => StringAbBlock(
-                  catalog.list[index],
-                  key: Key(
-                    index.toString(),
-                  ),
-                ),
-                itemCount: catalog.list.length,
-              ),
-            ),
-          ]),
+        Listen(
+      catalog.refreshed,
+      (ctx, child) => ReorderableListView.builder(
+        key: Key('list'),
+        buildDefaultDragHandles: false,
+        onReorder: (oldIndex, newIndex) {},
+        shrinkWrap: true,
+        itemBuilder: (c, index) => StringAbBlock(
+          catalog.list[index],
+          key: Key(
+            index.toString(),
+          ),
         ),
+        itemCount: catalog.list.length,
       ),
-    ]) /*,
-      ),
-    )*/
-        ;
+    );
   }
-
-  late TextEditingController _inputCtrl;
-
-  buildInput() => TextFormField(
-        controller: _inputCtrl,
-        decoration: const InputDecoration(
-          border: InputBorder.none,
-          hintText: 'ab',
-          contentPadding: EdgeInsets.all(8),
-        ),
-        style: const TextStyle(
-          color: Colors.black,
-          fontSize: 16,
-        ),
-        onFieldSubmitted: (doc) async {
-          /*
-          final i1 = doc.indexOf('('), i2 = doc.lastIndexOf(')');
-          final text =
-              (i1 == -1 ? doc.split(' ')[0] : doc.substring(0, i1)).trim();
-
-          List<String> args =
-              (i1 != -1 && i2 > i1) ? doc.substring(i1 + 1, i2).split('|') : [];
-
-          final thing = i1 == -1
-              ? (text.length < doc.length
-                  ? doc.substring(text.length + 1).trim()
-                  : widget.thing)
-              : ((i2 > i1) ? doc.substring(i2 + 1).trim() : '');
-            */
-
-          final id = getRandomString(4);
-          final log = LogFractal(
-            action: doc,
-            id: id,
-            time: DateTime.now().millisecondsSinceEpoch,
-            thing: widget.thing,
-          );
-
-          await log.store();
-          log.sync();
-
-          Log8Area.exp.allMatches(doc).forEach((match) async {
-            final opt = match.group(0)!.substring(1).trim();
-
-            final option = OptionFractal(
-              id: getRandomString(4),
-              of: id,
-              title: opt,
-            )..sync();
-            await option.store();
-          });
-
-          catalog.refresh();
-
-          _inputCtrl.clear();
-
-          //f.sync();
-        },
-      );
 
   Widget _getIconButton(color, icon) {
     return Container(
