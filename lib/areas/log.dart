@@ -95,7 +95,7 @@ class _Log8AreaState extends State<Log8Area> {
         Listen(
       catalog.refreshed,
       (ctx, child) => ReorderableListView.builder(
-        key: Key('list'),
+        key: const Key('list'),
         buildDefaultDragHandles: false,
         onReorder: (oldIndex, newIndex) {},
         shrinkWrap: true,

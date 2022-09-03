@@ -65,43 +65,46 @@ class _StringAbBlockState extends State<StringAbBlock> {
           ),
           color: active ? Colors.grey.shade300 : null,
           height: 40,
-          child: editMode
+          child: /*editMode
               ? buildInput()
-              : Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    InkWell(
-                      onTap: () {
-                        /*
-                        setState(() {
-                          active = !active;
-                        });
-                        */
+              : */
+              Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              InkWell(
+                onTap: () {
+                  /*
+                  setState(() {
+                    active = !active;
+                  });
+                  */
 
-                        Get.to(
-                          () => AbThingScreen(
-                            fractal: item,
-                            key: Key(item.thing.value),
-                          ),
-                          routeName: item.action.value,
-                        );
-                      },
-                      onLongPress: () {
-                        setState(() {
-                          editMode = !editMode;
-                        });
-                      },
-                      child: buildContent(),
-                    ).expand(),
-                    Text(
-                      item.time.value.toString(),
-                      style: const TextStyle(
-                        fontSize: 12,
-                        color: Colors.grey,
-                      ),
-                    ).pOnly(right: 4),
-                  ],
+                  Get.to(
+                    () => AbThingScreen(
+                      fractal: item,
+                      key: Key(item.thing.value),
+                    ),
+                    routeName: item.action.value,
+                  );
+                },
+                /*
+                onLongPress: () {
+                  setState(() {
+                    editMode = !editMode;
+                  });
+                },
+                */
+                child: buildContent(),
+              ).expand(),
+              Text(
+                item.time.value.toString(),
+                style: const TextStyle(
+                  fontSize: 12,
+                  color: Colors.grey,
                 ),
+              ).pOnly(right: 4),
+            ],
+          ),
         ),
       ),
     );
@@ -121,14 +124,14 @@ class _StringAbBlockState extends State<StringAbBlock> {
     return Container(
       height: double.infinity,
       padding: const EdgeInsets.only(
-        top: 2,
+        top: 1,
         left: 1,
       ),
-      child: [
-        Text(
-          value,
-          style: const TextStyle(fontSize: 16),
-        ),
+      child: Text(
+        value,
+        style: const TextStyle(fontSize: 16),
+      ),
+      /*
         const SizedBox(
           width: 4,
         ),
@@ -148,7 +151,8 @@ class _StringAbBlockState extends State<StringAbBlock> {
               ),
             ),
           ),
-      ].hStack(),
+          */
+      //].hStack(),
     );
   }
 
