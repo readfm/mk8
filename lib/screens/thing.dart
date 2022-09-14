@@ -36,8 +36,8 @@ class _AbThingState extends State<AbThingScreen>
     super.initState();
     _controller = TextEditingController();
     _controllerPlay = TextEditingController();
-    thing = _controller.text =
-        widget.fractal?.thing.value ?? 'https://news.ycombinator.com/';
+    thing = _controller.text = widget.fractal?.thing.value ??
+        'mk8://docs'; // 'https://news.ycombinator.com/';
     if (widget.fractal != null)
       _controllerPlay.text =
           widget.fractal!.action.value.replaceAll(Log8Area.exp, '').trim();
@@ -167,73 +167,72 @@ class _AbThingState extends State<AbThingScreen>
                   [
                     if (widget.fractal != null)
                       Listen(
-                          options.refreshed,
-                          (ctx, child) => DefaultTabController(
-                                length: options.list.length,
-                                child: SingleChildScrollView(
-                                  scrollDirection: Axis.horizontal,
-                                  child: Row(
-                                    crossAxisAlignment: CrossAxisAlignment.end,
-                                    verticalDirection: VerticalDirection.down,
-                                    children: [
-                                      TabBar(
-                                        labelPadding:
-                                            const EdgeInsets.symmetric(
-                                          horizontal: 8,
-                                          vertical: 4,
-                                        ),
-                                        isScrollable: true,
-                                        unselectedLabelColor: Colors.grey[400],
-                                        labelStyle: TextStyle(
-                                            fontSize: optionsHeight / 2),
-                                        indicatorWeight: 5,
-                                        //indicatorColor: Colors.grey,
-                                        labelColor: Colors.black,
-                                        indicatorColor:
-                                            Theme.of(context).primaryColor,
-                                        indicatorPadding: EdgeInsets.zero,
-                                        tabs: [
-                                          ...options.list.map(
-                                            (option) => buildTab(option),
-                                          ),
-                                        ],
-                                      ),
-                                      Container(
-                                        width: 140,
-                                        height: 32,
-                                        child: TextFormField(
-                                          //controller: ctrl,
-                                          style: new TextStyle(
-                                            fontWeight: FontWeight.normal,
-                                            fontSize: 16,
-                                            color: Colors.black,
-                                          ),
-                                          onFieldSubmitted: (value) async {
-                                            if (value.trim().isNotBlank) {
-                                              final option = OptionFractal(
-                                                id: getRandomString(4),
-                                                title: value.trim(),
-                                                of: widget.fractal!.id,
-                                              );
-                                              await option.store();
-                                              setState(() {
-                                                reload();
-                                              });
-                                            }
-                                          },
-                                          decoration: const InputDecoration(
-                                            contentPadding:
-                                                const EdgeInsets.only(
-                                                    bottom: 8),
-                                            prefixIcon: Icon(Icons.add),
-                                            hintText: 'new..',
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ).expand(),
+                        options.refreshed,
+                        (ctx, child) => DefaultTabController(
+                          length: options.list.length,
+                          child: SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              verticalDirection: VerticalDirection.down,
+                              children: [
+                                TabBar(
+                                  labelPadding: const EdgeInsets.symmetric(
+                                    horizontal: 8,
+                                    vertical: 4,
+                                  ),
+                                  isScrollable: true,
+                                  unselectedLabelColor: Colors.grey[400],
+                                  labelStyle:
+                                      TextStyle(fontSize: optionsHeight / 2),
+                                  indicatorWeight: 5,
+                                  //indicatorColor: Colors.grey,
+                                  labelColor: Colors.black,
+                                  indicatorColor:
+                                      Theme.of(context).primaryColor,
+                                  indicatorPadding: EdgeInsets.zero,
+                                  tabs: [
+                                    ...options.list.map(
+                                      (option) => buildTab(option),
+                                    ),
+                                  ],
                                 ),
-                              )),
+                                Container(
+                                  width: 140,
+                                  height: 32,
+                                  child: TextFormField(
+                                    //controller: ctrl,
+                                    style: new TextStyle(
+                                      fontWeight: FontWeight.normal,
+                                      fontSize: 16,
+                                      color: Colors.black,
+                                    ),
+                                    onFieldSubmitted: (value) async {
+                                      if (value.trim().isNotBlank) {
+                                        final option = OptionFractal(
+                                          id: getRandomString(4),
+                                          title: value.trim(),
+                                          of: widget.fractal!.id,
+                                        );
+                                        await option.store();
+                                        setState(() {
+                                          reload();
+                                        });
+                                      }
+                                    },
+                                    decoration: const InputDecoration(
+                                      contentPadding:
+                                          const EdgeInsets.only(bottom: 8),
+                                      prefixIcon: Icon(Icons.add),
+                                      hintText: 'new..',
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
                     if (widget.fractal != null)
                       GestureDetector(
                         onVerticalDragUpdate: (details) {
@@ -278,19 +277,23 @@ class _AbThingState extends State<AbThingScreen>
                             controller: _controllerPlay,
                             textAlign: TextAlign.center,
                             onFieldSubmitted: (value) {
-                              setState(() {
-                                renameMode = false;
+                              setState(
+                                () {
+                                  renameMode = false;
 
-                                widget.fractal!.action.value = value;
-                                (db.update(db.logs)
-                                      ..where((t) =>
-                                          t.id.equals(widget.fractal!.id)))
-                                    .write(
-                                  LogsCompanion(
-                                    action: Value(value),
-                                  ),
-                                );
-                              });
+                                  widget.fractal!.action.value = value;
+                                  (db.update(db.logs)
+                                        ..where(
+                                          (t) =>
+                                              t.id.equals(widget.fractal!.id),
+                                        ))
+                                      .write(
+                                    LogsCompanion(
+                                      action: Value(value),
+                                    ),
+                                  );
+                                },
+                              );
 
                               //widget.fractal.attr(name, frac);
                               //widget.fractal!.action.value = value;

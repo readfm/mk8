@@ -122,7 +122,7 @@ class _WysiwygInputState extends State<WysiwygInput>
           ZefyrToolbar.basic(
             controller: _controller,
           ),
-        ]).expand(),
+        ]),
       ),
       body: Container(
         color: Colors.grey.shade200,
